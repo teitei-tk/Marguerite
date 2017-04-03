@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .app import Marguerite
-from .acceessor import Accessor
+from .acceessor import AbstractAccessor, SQLAlchemyAccessor
 from .structure import Structure
 from .query import Query
 from .dispatcher import Dispatcher
