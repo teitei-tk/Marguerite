@@ -6,7 +6,6 @@ Marguerite defines how to access the database and provide interface.
 
 # Dependencies
 * Python 2.7 or later
-* SQLAlchemy 1.1.7 or later
 * Werkzeug 0.12.7 or later
 
 # Usage Flow.
