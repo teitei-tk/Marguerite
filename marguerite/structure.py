@@ -11,34 +11,31 @@ class Structure(object):
     __table__ = None
 
     def __init__(self):
-        self.validate()
+        self.is_valid()
 
-    def validate(self):
-        if not isinstance(self.quries, Query):
-            raise NotImplementedError
-
+    def is_valid(self):
         if self.quries.__len__() <= 0:
-            raise NotImplementedError
+            raise NotImplementedError("Query is not defined")
 
-        if not isinstance(self.struct, dict):
-            raise NotImplementedError
-
-        for k, v in self.struct.items():
+        for k, v in self.quries.items():
             if not isinstance(k, str):
-                raise NotImplementedError
+                raise RuntimeError("should be {} is string.".format(k))
 
             if not isinstance(v, str):
-                raise NotImplementedError
+                raise RuntimeError("should be {} is string".format(v))
 
     @cached_property
     def table_name(self):
         if not self.__table__:
-            self.__table__ = re.sub('(?!^)([A-Z]+)', r'_\1', self.__name__).lower().__str__()
+            self.__table__ = re.sub('(?!^)([A-Z]+)', r'_\1', self.__class__.__name__).lower().__str__()
         return self.__table__
 
     def get_query(self, name):
         return self.quries.get(name)
 
+    def get_entity(self):
+        return self.struct
+
     @cached_property
     def entity(self):
-        return self.struct.__dict__.copy()
+        return self.struct
