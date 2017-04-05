@@ -24,5 +24,7 @@ class User(Structure):
             *
         FROM
             __table__
+        WHERE
+            id in (:ids)
     """
   )

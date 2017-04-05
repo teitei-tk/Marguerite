@@ -11,5 +11,5 @@ engine = create_engine('mysql://root:@localhost/margruite')
 marguerite = Marguerite(engine)
 
 accessor = marguerite.get_accessor("user.User")
-results = accessor.find("users")
+results = accessor.find("users", { "ids": [1, 2] })
 print(results)

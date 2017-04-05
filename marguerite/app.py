@@ -3,7 +3,8 @@
 from werkzeug import import_string
 from werkzeug.utils import cached_property
 
-from acceessor import SQLAlchemyAccessor as DefaultAccessor, AbstractAccessor
+from acceessor import AbstractAccessor
+from sql.accessor import SQLAlchemyAccessor as DefaultAccessor
 from structure import Structure
 
 class Marguerite(object):
