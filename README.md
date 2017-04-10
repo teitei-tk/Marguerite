@@ -8,6 +8,11 @@ Marguerite provides a declarative, consistent accessor to data layer.
 * Python 2.7 or later
 * Werkzeug 0.12.7 or later
 
+# Installation
+```bash
+$ pip install Marguerite
+```
+
 # Usage Flow.
 1. define formater.
 ```python
