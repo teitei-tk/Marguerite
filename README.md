@@ -1,6 +1,6 @@
 # Marguerite
 
-Marguerite defines how to access the database and provide interface.
+Marguerite provides a declarative, consistent accessor to data layer.
 
 ---
 
@@ -9,55 +9,77 @@ Marguerite defines how to access the database and provide interface.
 * Werkzeug 0.12.7 or later
 
 # Usage Flow.
-1. define database structure.
+1. define formater.
 ```python
-from marguerite import Structure, Query
+from marguerite import AbstractFormater, Order
 
-class User(Structure):
+class User(AbstractFormater):
   struct = {
-    "id"  : int(),
-    "name": str(),
+    "id"    : int(),
+    "name"  : str(),
+    "email" : str(),
   }
 
-  queries = Query(
+  orders = Order(
     user = """
-      SELECT
-        *
-      FROM
-        __table__
-      WHERE
-        id = :id
+        SELECT
+            *
+        FROM
+            __table__
+        WHERE
+            id = :id
     """,
 
     users = """
-      SELECT
-        *
-      FROM
-        __table__
-      WHERE
-        id in (:ids)
+        SELECT
+            *
+        FROM
+            __table__
+        WHERE
+            id in (:ids)
     """
   )
 ```
 
-2. call database accessor object
+2. get data layer accessor object
 ```python
-from marguerite import Marguerite
-from sqlalchemy import create_engine
+from marguerite import Marguerite, AbstractAccessor
+from marguerite.accessors import bind
 
-engine = create_engine("mysql://scott:tiger@localhost/foo")
-marguerite = Marguerite(engine)
+class Accessor(AbstractAccessor):
+    def get(self, name, value={}):
+        order = self.formater.get_order(name)
+        return bind(order, value)
 
-accessor = marguerite.get_accessor("User")
+marguerite = Marguerite(None, Accessor)
+accessor = marguerite.get_accessor("path.to.User")
 ```
 
-3. fetch database row
+3. fetch data
 ```python
 # as dict
-user = accessor.get("user", { "id": 1 })
-print(user) # {'id': 1, 'name': 'john'}
+result = accessor.get("user", { "id": 1 })
+print(result)
+# result
+"""
+  SELECT
+      *
+  FROM
+      __table__
+  WHERE
+      id = 1
+"""
 
 # as array
-users = accessor.find("users", { "ids": [1, 2] })
-print(users) # [{'id': 1, 'name': 'john'}]
+result = accessor.find("users", { "ids": [1, 2] })
+print(result)
+# result
+"""
+  SELECT
+      *
+  FROM
+      __table__
+  WHERE
+      id in (1, 2)
+"""
 ```

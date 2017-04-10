@@ -9,7 +9,8 @@ def bind(order, params = {}):
         if not k or not v:
             continue
         if isinstance(v, list):
-            query = replacer(query, k, ", ".join(x))
+            c = [str(x) for x in v if x]
+            query = replacer(query, k, ", ".join(c))
         else:
             query = replacer(query, k, str(v))
     return query

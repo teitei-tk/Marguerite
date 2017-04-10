@@ -12,10 +12,13 @@ class Accessor(AbstractAccessor):
         order = self.formater.get_order(name)
         return bind(order, value)
 
+    def find(self, name, value={}):
+        return self.get(name, value)
+
 app = Marguerite(None, Accessor)
 accessor = app.get_accessor("user.User")
 
-print(accessor.get("user", {"id": 1}))
+print(accessor.find("users", {"ids": [1, 2]}))
 # result
 """
         SELECT
