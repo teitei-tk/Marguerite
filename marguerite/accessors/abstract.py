@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class AbstractAccessor(object):
-    def __init__(self, driver, structure):
+    def __init__(self, driver, formater):
         self.driver = driver
-        self.structure = structure
+        self.formater = formater
 
         self.is_valid()
         self.initialize()
@@ -18,6 +18,9 @@ class AbstractAccessor(object):
         self.driver = driver
         return self
 
+    def create(self, name, value = {}):
+        return self.execute(name, value)
+
     def get(self, name, value = {}):
         raise NotImplementedError("get method is not implemented")
 
@@ -27,7 +30,7 @@ class AbstractAccessor(object):
     def update(self, name, value = {}):
         return self.execute(name, value)
 
-    def insert(self, name, value = {}):
+    def destory(self, name, value = {}):
         return self.execute(name, value)
 
     def execute(self, name, value):

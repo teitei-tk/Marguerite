@@ -1,23 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from werkzeug import import_string
-from werkzeug.utils import cached_property
-
-from acceessor import AbstractAccessor
-from sql.accessor import SQLAlchemyAccessor as DefaultAccessor
-from structure import Structure
+from .accessors import AbstractAccessor
+from .formaters import AbstractFormater
+from .utils import cached_property, import_string
 
 class Marguerite(object):
-    __accessor__ = DefaultAccessor
-
-    def __init__(self, driver):
+    def __init__(self, driver, accesor):
         self.driver = driver
+        self.__accessor__ = accesor
         self.accessores = {}
 
-        self.is_valid()
-
-    def is_valid(self):
-        if not issubclass(self.__accessor__, AbstractAccessor):
+    def assert_accessor(self, accessor):
+        if not isinstance(accessor, AbstractAccessor):
             raise NotImplementedError("accessor is not implemented.")
 
     @cached_property
@@ -29,10 +23,11 @@ class Marguerite(object):
         if accessor and not reload:
             return accessor.reload(self.driver)
 
-        struct = import_string(namespace_path)
-        if not issubclass(struct, Structure):
-            raise NotImplementedError
+        formater = import_string(namespace_path)()
+        if not isinstance(formater, AbstractFormater):
+            raise NotImplementedError("formater is must be extends AbstractFormater")
 
-        accessor = self.accessor(self.driver, struct())
+        accessor = self.accessor(self.driver, formater)
+        self.assert_accessor(accessor)
         self.accessores[namespace_path] = accessor
         return accessor

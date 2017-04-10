@@ -4,12 +4,25 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-from marguerite import Marguerite
-from sqlalchemy import create_engine
+from marguerite import Marguerite, AbstractAccessor
+from marguerite.accessors import bind
 
-engine = create_engine('mysql://root:@localhost/margruite')
-marguerite = Marguerite(engine)
+class Accessor(AbstractAccessor):
+    def get(self, name, value={}):
+        order = self.formater.get_order(name)
+        return bind(order, value)
 
-accessor = marguerite.get_accessor("user.User")
-results = accessor.find("users", { "ids": [1, 2] })
-print(results)
+app = Marguerite(None, Accessor)
+accessor = app.get_accessor("user.User")
+
+print(accessor.get("user", {"id": 1}))
+# result
+"""
+        SELECT
+            *
+        FROM
+            __table__
+        WHERE
+            id = 1
+
+"""

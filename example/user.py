@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from marguerite import Structure, Query
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-class User(Structure):
+from marguerite import AbstractFormater, Order
+
+class User(AbstractFormater):
   struct = {
     "id"    : int(),
     "name"  : str(),
     "email" : str(),
   }
 
-  quries = Query(
+  orders = Order(
     user = """
         SELECT
             *
