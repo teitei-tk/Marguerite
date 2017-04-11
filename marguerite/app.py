@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .accessors import AbstractAccessor
-from .formaters import AbstractFormater
+from .structures import AbstractStructure
 from .utils import cached_property, import_string
 
 class Marguerite(object):
@@ -23,11 +23,11 @@ class Marguerite(object):
         if accessor and not reload:
             return accessor.reload(self.driver)
 
-        formater = import_string(namespace_path)()
-        if not isinstance(formater, AbstractFormater):
-            raise NotImplementedError("formater is must be extends AbstractFormater")
+        structure = import_string(namespace_path)()
+        if not isinstance(structure, AbstractStructure):
+            raise NotImplementedError("structure is must be extends AbstractStructure")
 
-        accessor = self.accessor(self.driver, formater)
+        accessor = self.accessor(self.driver, structure)
         self.assert_accessor(accessor)
         self.accessores[namespace_path] = accessor
         return accessor

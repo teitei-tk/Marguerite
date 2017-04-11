@@ -4,9 +4,9 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-from marguerite import AbstractFormater, Order
+from marguerite import AbstractStructure, Order
 
-class User(AbstractFormater):
+class User(AbstractStructure):
   struct = {
     "id"    : int(),
     "name"  : str(),

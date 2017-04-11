@@ -9,7 +9,7 @@ from marguerite.accessors import bind
 
 class Accessor(AbstractAccessor):
     def get(self, name, value={}):
-        order = self.formater.get_order(name)
+        order = self.structure.get_order(name)
         return bind(order, value)
 
     def find(self, name, value={}):

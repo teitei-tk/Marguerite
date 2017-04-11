@@ -3,7 +3,7 @@
 import re
 import copy
 
-class AbstractFormater(object):
+class AbstractStructure(object):
     orders = None
     entity = None
 

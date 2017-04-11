@@ -2,7 +2,7 @@
 
 from .app import Marguerite
 from .accessors import AbstractAccessor
-from .formaters import AbstractFormater, AbstractOrder, Order
+from .structures import AbstractStructure, AbstractOrder, Order
 from .query import Query
 from .utils import cached_property, import_string
 

@@ -16,9 +16,9 @@ $ pip install Marguerite
 # Usage Flow.
 1. define formater.
 ```python
-from marguerite import AbstractFormater, Order
+from marguerite import AbstractStructure, Order
 
-class User(AbstractFormater):
+class User(AbstractStructure):
   struct = {
     "id"    : int(),
     "name"  : str(),
