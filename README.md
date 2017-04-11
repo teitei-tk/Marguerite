@@ -14,77 +14,58 @@ $ pip install Marguerite
 ```
 
 # Usage Flow.
-1. define formater.
+Install requests as an example.
+
+```bash
+$ pip install requests
+```
+
+1. define data layer accessor, and writen access structure
 ```python
-from marguerite import AbstractStructure, Order
+from marguerite import AbstractStructure, AbstractAccessor, Order
+from marguerite.accessors import bind
 
-class User(AbstractStructure):
-  struct = {
-    "id"    : int(),
-    "name"  : str(),
-    "email" : str(),
-  }
+class Accessor(AbstractAccessor):
+    def prepare(self, name, value):
+        order = self.structure.get_order(name)
+        return bind(order, value)
 
-  orders = Order(
-    user = """
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id = :id
-    """,
+    def create(self, name, value):
+        order = self.prepare(name, value)
+        return requests.post(order).json()
 
-    users = """
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id in (:ids)
-    """
-  )
+    def get(self, name, value={}):
+        order = self.prepare(name, value)
+        return requests.get(order).json()
+
+
+class UserStructure(AbstractStructure):
+    __accessor__ = Accessor
+
+    orders = Order(
+        user = "https://example.com/users/:id",
+        create = "https://example.com/users/:id?=username=:username"
+    )
 ```
 
 2. get data layer accessor object
 ```python
-from marguerite import Marguerite, AbstractAccessor
-from marguerite.accessors import bind
+from marguerite import Marguerite
 
-class Accessor(AbstractAccessor):
-    def get(self, name, value={}):
-        order = self.formater.get_order(name)
-        return bind(order, value)
-
-marguerite = Marguerite(None, Accessor)
-accessor = marguerite.get_accessor("path.to.User")
+marguerite = Marguerite()
+accessor = marguerite.get_accessor("path.to.UserStructure")
 ```
 
 3. fetch data
 ```python
-# as dict
+# execute get logic
 result = accessor.get("user", { "id": 1 })
-print(result)
-# result
-"""
-  SELECT
-      *
-  FROM
-      __table__
-  WHERE
-      id = 1
-"""
+print(result) # {"id": 1, "username": "john"...}
 
-# as array
-result = accessor.find("users", { "ids": [1, 2] })
-print(result)
-# result
-"""
-  SELECT
-      *
-  FROM
-      __table__
-  WHERE
-      id in (1, 2)
-"""
+# execute post logic
+result = accessor.create("user", { "id": 2, "username": "marguerite" })
+print(result) # {"status": "success", {"result": {"id": 2, "username": "marguerite"...}}}
 ```
+
+# LICENSE
+Apache License 2.0

@@ -12,7 +12,7 @@ f = open('README.rst')
 __doc__ = f.read()
 f.close()
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
