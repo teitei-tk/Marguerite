@@ -4,28 +4,10 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-from marguerite import Marguerite, AbstractAccessor
-from marguerite.accessors import bind
+from marguerite import Marguerite
 
-class Accessor(AbstractAccessor):
-    def get(self, name, value={}):
-        order = self.formater.get_order(name)
-        return bind(order, value)
-
-    def find(self, name, value={}):
-        return self.get(name, value)
-
-app = Marguerite(None, Accessor)
+app = Marguerite()
 accessor = app.get_accessor("user.User")
 
-print(accessor.find("users", {"ids": [1, 2]}))
-# result
-"""
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id = 1
-
-"""
+print(accessor.get("request", {"id": 1})) # https://example.com/users/1
+print(accessor.get("create", {"id": 1, "username": "marguerite"})) # https://example.com/users/1?=username=marguerite

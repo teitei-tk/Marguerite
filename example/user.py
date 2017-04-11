@@ -4,31 +4,21 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/../')
 
-from marguerite import AbstractFormater, Order
+from marguerite import AbstractStructure, Order, AbstractAccessor
+from marguerite.accessors import bind
 
-class User(AbstractFormater):
-  struct = {
-    "id"    : int(),
-    "name"  : str(),
-    "email" : str(),
-  }
+class Accessor(AbstractAccessor):
+    def get(self, name, value={}):
+        order = self.structure.get_order(name)
+        return bind(order, value)
 
-  orders = Order(
-    user = """
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id = :id
-    """,
+    def find(self, name, value={}):
+        return self.get(name, value)
 
-    users = """
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id in (:ids)
-    """
-  )
+class User(AbstractStructure):
+    __accessor__ = Accessor
+
+    orders = Order(
+        request = "https://example.com/users/:id",
+        create = "https://example.com/users/:id?=username=:username"
+    )

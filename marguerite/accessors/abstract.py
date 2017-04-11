@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class AbstractAccessor(object):
-    def __init__(self, driver, formater):
+    def __init__(self, driver, structure):
         self.driver = driver
-        self.formater = formater
+        self.structure = structure
 
         self.is_valid()
         self.initialize()

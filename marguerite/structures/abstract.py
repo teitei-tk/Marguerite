@@ -3,12 +3,20 @@
 import re
 import copy
 
-class AbstractFormater(object):
+from ..accessors import AbstractAccessor
+from ..utils import cached_property
+
+class AbstractStructure(object):
+    __accessor__ = AbstractAccessor
+
     orders = None
-    entity = None
 
     def __init__(self, *args, **kwargs):
         self.is_valid()
+
+    @cached_property
+    def accessor(self):
+        return self.__accessor__
 
     def is_valid(self):
         if not isinstance(self.orders, dict):
@@ -26,6 +34,3 @@ class AbstractFormater(object):
 
     def get_order(self, name):
         return self.orders.get(name)
-
-    def get_entity(self):
-        return copy.copy(self.entity)

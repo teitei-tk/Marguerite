@@ -11,46 +11,69 @@ Dependencies
 -  Python 2.7 or later
 -  Werkzeug 0.12.7 or later
 
+Installation
+============
+
+.. code:: bash
+
+    $ pip install Marguerite
+
 Usage Flow.
 ===========
 
-1. define formater. \`\`\`python from marguerite import
-   AbstractFormater, Order
+Install requests as an example.
 
-class User(AbstractFormater): struct = { "id" : int(), "name" : str(),
-"email" : str(), }
+.. code:: bash
 
-orders = Order( user = """ SELECT \* FROM **table** WHERE id = :id """,
+    $ pip install requests
+
+1. define data layer accessor, and writen access structure \`\`\`python
+   from marguerite import AbstractStructure, AbstractAccessor, Order
+   from marguerite.accessors import bind
+
+class Accessor(AbstractAccessor): def prepare(self, name, value): order
+= self.structure.get\_order(name) return bind(order, value)
 
 ::
 
-    users = """
-        SELECT
-            *
-        FROM
-            __table__
-        WHERE
-            id in (:ids)
-    """
+    def create(self, name, value):
+        order = self.prepare(name, value)
+        return requests.post(order).json()
 
-) \`\`\`
+    def get(self, name, value={}):
+        order = self.prepare(name, value)
+        return requests.get(order).json()
+        
+
+class UserStructure(AbstractStructure): **accessor** = Accessor
+
+::
+
+    orders = Order(
+        user = "https://example.com/users/:id",
+        create = "https://example.com/users/:id?=username=:username"
+    )
+
+\`\`\`
 
 2. get data layer accessor object \`\`\`python from marguerite import
-   Marguerite, AbstractAccessor from marguerite.accessors import bind
+   Marguerite
 
-class Accessor(AbstractAccessor): def get(self, name, value={}): order =
-self.formater.get\_order(name) return bind(order, value)
+marguerite = Marguerite() accessor =
+marguerite.get\_accessor("path.to.UserStructure") \`\`\`
 
-marguerite = Marguerite(None, Accessor) accessor =
-marguerite.get\_accessor("path.to.User") \`\`\`
+3. fetch data \`\`\`python # execute get logic result =
+   accessor.get("user", { "id": 1 }) print(result) # {"id": 1,
+   "username": "john"...}
 
-3. fetch data \`\`\`python # as dict result = accessor.get("user", {
-   "id": 1 }) print(result) # result """ SELECT
+execute post logic
+==================
 
-   -  FROM **table** WHERE id = 1 """
+result = accessor.create("user", { "id": 2, "username": "marguerite" })
+print(result) # {"status": "success", {"result": {"id": 2, "username":
+"marguerite"...}}} \`\`\`
 
-as array
-========
+LICENSE
+=======
 
-result = accessor.find("users", { "ids": [1, 2] }) print(result) #
-result """ SELECT \* FROM **table** WHERE id in (1, 2) """ \`\`\`
+Apache License 2.0
