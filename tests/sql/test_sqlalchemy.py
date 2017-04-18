@@ -4,7 +4,7 @@ import unittest
 from sqlalchemy import create_engine
 from marguerite import Marguerite
 
-engine = create_engine("mysql+mysqldb://root:@localhost:3309/marguerite")
+engine = create_engine("mysql+pymysql://root:@localhost/marguerite")
 app = Marguerite(engine)
 
 class TestSQLAlchemy(unittest.TestCase):

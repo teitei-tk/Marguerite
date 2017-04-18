@@ -73,7 +73,7 @@ print(result) # {"status": "success", {"result": {"id": 2, "username": "margueri
 ## SQLAlchemy
 
 ```bash
-$ pip install SQLAlchemy MySQL-python
+$ pip install SQLAlchemy PyMySQL
 ```
 
 1. create database
@@ -139,7 +139,7 @@ class User(SQLAlchemyStructure):
 ```python
 from marguerite import Marguerite
 
-engine = create_engine("mysql+mysqldb://root:@localhost:3309/marguerite")
+engine = create_engine("mysql+pymysql://root:@localhost/marguerite")
 
 marguerite = Marguerite(engine)
 accessor = marguerite.get_accessor("path.to.User")
