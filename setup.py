@@ -12,7 +12,7 @@ f = open('README.rst')
 __doc__ = f.read()
 f.close()
 
-VERSION = "1.0.1"
+VERSION = "1.0.2"
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -36,6 +36,6 @@ setup(
     license='MIT',
     classifiers=classifiers,
     install_requires=open('requirements.txt').read().splitlines(),
-    keywords=['Marguerite', 'dispatcher', 'architecture'],
+    keywords=['Marguerite', 'dispatcher', 'architecture', 'SQLAlchemy'],
     download_url='https://github.com/teitei-tk/Marguerite/archive/master.tar.gz'
 )
