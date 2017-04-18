@@ -5,4 +5,4 @@ from .accessors import AbstractAccessor
 from .structures import AbstractStructure, AbstractOrder, Order
 from .utils import cached_property, import_string
 
-__version__ = '1.0.1'
+__version__ = '1.0.2'
