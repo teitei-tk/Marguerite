@@ -5,6 +5,7 @@ Marguerite provides a declarative, consistent accessor to data layer.
 ---
 
 [![Build Status](https://travis-ci.org/teitei-tk/Marguerite.svg?branch=master)](https://travis-ci.org/teitei-tk/Marguerite)
+[![PyPI version](https://badge.fury.io/py/Marguerite.svg)](https://badge.fury.io/py/Marguerite)
 
 # Dependencies
 * Python 2.7 or later
